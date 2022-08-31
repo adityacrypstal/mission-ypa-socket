@@ -13,7 +13,7 @@ subClient.on('connect', () => console.log('Connected to Redis!'));
 subClient.connect();
 
 subClient.subscribe('notifications', async (message) => {
-    let data = JSON.parse(message || {});
+    let {body: data = {}} = JSON.parse(message || {});
     if (!data.userId && !data.eventType) return;
     let template, smsBody;
     switch (data.eventType) {
@@ -71,7 +71,10 @@ subClient.subscribe('notifications', async (message) => {
             await emailService.sendEmail(data.email, template);
             break;
         case 'PROJECT_COMPLETION':
-            template = await ejs.renderFile('templates/project-completed.ejs', {email: data.email, project: data.project.name});
+            template = await ejs.renderFile('templates/project-completed.ejs', {
+                email: data.email,
+                project: data.project.name
+            });
             smsBody = SMS_TEMPLATE[data.eventType];
             await smsService.TextMessage(data.phone, smsBody);
             await emailService.sendEmail(data.email, template);
