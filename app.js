@@ -30,29 +30,29 @@ io.use((socket, next) => {
         next(new Error("invalid"));
     }
 }).on("connection", (socket) => {
-    socketAdd(socket.decoded.id, socket);
-    socket.on("join", (data) => {
-        const user = {
-            socketId: data.driverId,
-            coords: data.location,
-        };
-        users[data.driverId] = data.location;
-        socket.broadcast.emit("new-user", user);
-        socket.emit("current-user", user);
-        socket.emit("users", users);
-    });
-
-    socket.on("position-change", (data) => {
-        users[data.driverId] = data.location;
-        socket.emit("users", users);
-        // io.emit("position-change", data);
-    });
-
-    socket.on("disconnect", (data) => {
-        socketRemove(socket.decoded.id);
-        delete users[data.driverId];
-        socket.broadcast.emit("users", users);
-    });
+    // socketAdd(socket.decoded.id, socket);
+    // socket.on("join", (data) => {
+    //     const user = {
+    //         socketId: data.driverId,
+    //         coords: data.location,
+    //     };
+    //     users[data.driverId] = data.location;
+    //     socket.broadcast.emit("new-user", user);
+    //     socket.emit("current-user", user);
+    //     socket.emit("users", users);
+    // });
+    //
+    // socket.on("position-change", (data) => {
+    //     users[data.driverId] = data.location;
+    //     socket.emit("users", users);
+    //     // io.emit("position-change", data);
+    // });
+    //
+    // socket.on("disconnect", (data) => {
+    //     socketRemove(socket.decoded.id);
+    //     delete users[data.driverId];
+    //     socket.broadcast.emit("users", users);
+    // });
 });
 
 
