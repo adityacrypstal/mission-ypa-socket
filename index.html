@@ -22,7 +22,7 @@
 </form>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    var socket = io.connect('http://localhost:5000', {
+    var socket = io.connect('http://localhost:6001', {
         query: {token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkQtMzMiLCJlbWFpbCI6ImR0ZXN0NTYyMkBnbWFpbC5jb20iLCJwaG9uZSI6IjA4MTExOTc3MTciLCJ1c2VyUm9sZSI6IkRSSVZFUiIsImxvZ2dlZEluIjoxLCJzdGF0dXMiOjEsImlzRGVsZXRlZCI6MCwiY3JlYXRlZEF0IjoiMjAyMi0wNC0wNFQwMjozODozMi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0wNi0xOVQwNjo0NjoxMS4wMDBaIiwiaWF0IjoxNjU1Njk3NDE2LCJleHAiOjE2NTU3ODM4MTZ9.U2fhRi-r2fB8hawzmSRjA-NDaaoLJWXPDO2xLaDezOo'}
     });
 
@@ -33,12 +33,13 @@
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-            socket.emit('join', {driverId:1,location:[10,10]});
+            socket.emit('join', {});
             input.value = '';
         }
     });
 
-    socket.on('chat message', function(msg) {
+    socket.on('chat', function(msg) {
+        console.log(msg)
         var item = document.createElement('li');
         item.textContent = msg;
         messages.appendChild(item);
