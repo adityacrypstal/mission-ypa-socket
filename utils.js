@@ -1,9 +1,9 @@
-let sockets = {};
-const socketAdd = (userId, socket) => {
-    sockets[userId] = socket;
+let socket ;
+
+const socketAdd = (data) => {
+    socket = data;
 };
-const socketRemove = (userId) => {
-    delete sockets[userId];
-};
-const getSocket = (userId) => sockets[userId];
-module.exports = {sockets,socketAdd,socketRemove,getSocket};
+
+const getSocket = () => socket;
+
+module.exports = {socketAdd, getSocket};
