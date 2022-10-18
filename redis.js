@@ -50,37 +50,36 @@ subClient.subscribe('notifications', async (message) => {
             await emailService.sendEmail(data.user?.email, template, "Project Updated");
             break;
         case 'STATUS_CHANGE_TASK':
-            // template = await ejs.renderFile('templates/status-change-task.ejs', {
-            //     email: data.email,
-            //     from: data.from,
-            //     to: data.to,
-            //     task: data.task.name,
-            //     project: data.project?.name
-            // });
+            template = await ejs.renderFile('templates/status-change-task.ejs', {
+                email: data.user?.email||"",
+                from: data.from||"",
+                to: data.to||"",
+                task: data?.task?.task,
+                project: data?.project?.name
+            });
             // smsBody = SMS_TEMPLATE[data.eventType];
             // await smsService.TextMessage(data.phone, smsBody);
-            // await emailService.sendEmail(data.email, template);
+            await emailService.sendEmail(data.user?.email, template, "Task has been updated");
             break;
         case 'CHANNEL_TRANSITION':
-            // template = await ejs.renderFile('templates/channel-change.ejs', {
-            //     email: data.email,
-            //     from: data.from,
-            //     to: data.to,
-            //     project: data.project?.name
-            // });
+            template = await ejs.renderFile('templates/channel-change.ejs', {
+                email: data.email,
+                from: data.from,
+                to: data.to,
+                project: data.project?.name
+            });
             // smsBody = SMS_TEMPLATE[data.eventType];
             // await smsService.TextMessage(data.phone, smsBody);
-            // await emailService.sendEmail(data.email, template);
+            await emailService.sendEmail(data.email, template, "New Project has been assigned");
             break;
-        case 'PROJECT_COMPLETION':
-            // template = await ejs.renderFile('templates/project-completed.ejs', {
-            //     email: data.email,
-            //     project: data.project.name
-            // });
+        case 'PROJECT_COMPLETIONPROJECT_COMPLETION':
+            template = await ejs.renderFile('templates/project-completed.ejs', {
+                email: data.user?.email,
+                project: data.project.name
+            });
             // smsBody = SMS_TEMPLATE[data.eventType];
-            // console.log(template, smsBody);
             // await smsService.TextMessage(data.phone, smsBody);
-            // await emailService.sendEmail(data.email, template);
+            await emailService.sendEmail(data.user?.email, template, "Project Completed");
             break;
         case 'TASK_NO_RESPONSE':
             // template = await ejs.renderFile('templates/task-no-response.ejs', {
@@ -101,8 +100,6 @@ subClient.subscribe('notifications', async (message) => {
             // await smsService.TextMessage(data.phone, smsBody);
             // await emailService.sendEmail(data.email, template);
             break;
-
-
         default:
     }
 });
