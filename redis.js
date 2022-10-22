@@ -1,4 +1,4 @@
-const  {getSocket} = require("./utils");
+const {getSocket} = require("./utils");
 
 const {createClient} = require("redis");
 
@@ -36,7 +36,7 @@ subClient.subscribe('notifications', async (message) => {
             });
             // smsBody = SMS_TEMPLATE[data.eventType];
             // await smsService.TextMessage(data.phone, smsBody);
-            await emailService.sendEmail(data.user?.email, template,"Project Assigned!");
+            await emailService.sendEmail(data.user?.email, template, "Project Assigned!");
             break;
         case 'STATUS_CHANGE':
             template = await ejs.renderFile('templates/status-change.ejs', {
@@ -51,9 +51,9 @@ subClient.subscribe('notifications', async (message) => {
             break;
         case 'STATUS_CHANGE_TASK':
             template = await ejs.renderFile('templates/status-change-task.ejs', {
-                email: data.user?.email||"",
-                from: data.from||"",
-                to: data.to||"",
+                email: data.user?.email || "",
+                from: data.from || "",
+                to: data.to || "",
                 task: data?.task?.task,
                 project: data?.project?.name
             });
@@ -63,23 +63,33 @@ subClient.subscribe('notifications', async (message) => {
             break;
         case 'CHANNEL_TRANSITION':
             template = await ejs.renderFile('templates/channel-change.ejs', {
-                email: data.email,
+                email: data.user?.email,
                 from: data.from,
                 to: data.to,
                 project: data.project?.name
             });
             // smsBody = SMS_TEMPLATE[data.eventType];
             // await smsService.TextMessage(data.phone, smsBody);
-            await emailService.sendEmail(data.email, template, "New Project has been assigned");
+            await emailService.sendEmail(data.user?.emaill, template, "New Project has been updated");
             break;
-        case 'PROJECT_COMPLETIONPROJECT_COMPLETION':
+        case 'PROJECT_COMPLETION':
             template = await ejs.renderFile('templates/project-completed.ejs', {
                 email: data.user?.email,
                 project: data.project.name
             });
             // smsBody = SMS_TEMPLATE[data.eventType];
             // await smsService.TextMessage(data.phone, smsBody);
-            await emailService.sendEmail(data.user?.email, template, "Project Completed");
+            await emailService.sendEmail(data.user?.email, template, "Project Completed!");
+            break;
+        case 'TASK_REJECTED':
+            template = await ejs.renderFile('templates/task-rejected.ejs', {
+                email: data.user?.email,
+                project: data.project?.name,
+                task:  data?.task.task
+            });
+            // smsBody = SMS_TEMPLATE[data.eventType];
+            // await smsService.TextMessage(data.phone, smsBody);
+            await emailService.sendEmail(data.user?.email, template, "Task Rejected!");
             break;
         case 'TASK_NO_RESPONSE':
             // template = await ejs.renderFile('templates/task-no-response.ejs', {
@@ -105,9 +115,9 @@ subClient.subscribe('notifications', async (message) => {
 });
 
 subClient.subscribe('chat', (message) => {
-    let {body:data={}} = JSON.parse(message || {});
+    let {body: data = {}} = JSON.parse(message || {});
     if (!data.projectId) return;
     const socket = getSocket();
     socket &&
-    socket.emit('chat', { data });
+    socket.emit('chat', {data});
 });
